@@ -11,6 +11,13 @@ namespace IoBeans.Servicios.Inplementacion
         {
             _dbContext = dbContext;
         }
+
+        public List<Role> GetRoles()
+        {
+            var roles = _dbContext.Roles.ToListAsync();
+            return roles.Result;
+        }
+
         public async Task<Login> GetUsuario(string usuario, string clave)
         {
             Login usuario_encontrado = await _dbContext.Logins.Where(u => u.Username == usuario && u.Password == clave).FirstOrDefaultAsync();

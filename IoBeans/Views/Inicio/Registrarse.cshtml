@@ -1,4 +1,5 @@
 ﻿@model IoBeans.Models.Login;
+
 @{
     Layout = null;
 }
@@ -29,12 +30,8 @@
 
                             <input class="form-control mb-3" type="text" placeholder="Usuario" required asp-for="Username" />
                             <input class="form-control mb-3" type="password" placeholder="Contraseña" required asp-for="Password" />
-                            <label for="favoriteOnly">Selecciona tu rol:</label>
-                            <select class="form-control mb-3" name="rol" id="RoleID">
-                                <option value="1">Admin</option>
-                                <option value="2">Usuario</option>
-                            </select>
-
+                            @Html.DropDownListFor(m => m.RoleId, (List<SelectListItem>)ViewBag.roles, "Seleccione un rol", new { @class = "form-control btn-block" })
+                            <br />
                             <div class="d-grid gap-2 mb-3">
                                 <button class="btn btn-primary" type="submit">Registrate</button>
                             </div>

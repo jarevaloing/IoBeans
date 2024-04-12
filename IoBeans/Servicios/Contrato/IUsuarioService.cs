@@ -6,5 +6,6 @@ namespace IoBeans.Servicios.Contrato
     {
         Task<Login> GetUsuario(string usuario, string clave);
         Task<Login> SaveUsuario(Login modelo);
+        List<Role> GetRoles();
     }
 }

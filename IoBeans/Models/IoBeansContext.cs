@@ -34,19 +34,23 @@ namespace IoBeans.Models
             modelBuilder.Entity<Login>(entity =>
             {
                 entity.HasKey(e => e.UserId)
-                    .HasName("PK__Login__1788CCACFE856222");
+                    .HasName("PK__Login__1788CCACE0CE3228");
 
                 entity.ToTable("Login");
 
-                entity.Property(e => e.UserId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("UserID");
+                entity.Property(e => e.UserId).HasColumnName("UserID");
 
                 entity.Property(e => e.Password).HasMaxLength(100);
 
                 entity.Property(e => e.RoleId).HasColumnName("RoleID");
 
                 entity.Property(e => e.Username).HasMaxLength(50);
+
+                entity.HasOne(d => d.Role)
+                    .WithMany(p => p.Logins)
+                    .HasForeignKey(d => d.RoleId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Login__RoleID__398D8EEE");
             });
 
             modelBuilder.Entity<Role>(entity =>
@@ -61,7 +65,7 @@ namespace IoBeans.Models
             modelBuilder.Entity<SensorDatum>(entity =>
             {
                 entity.HasKey(e => e.ReadingId)
-                    .HasName("PK__SensorDa__C80F9C6EA90CD93E");
+                    .HasName("PK__SensorDa__C80F9C6E066AE09A");
 
                 entity.Property(e => e.ReadingId)
                     .ValueGeneratedNever()

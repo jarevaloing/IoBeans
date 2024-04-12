@@ -6,6 +6,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using System.Numerics;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace IoBeans.Controllers
 {
@@ -21,6 +22,8 @@ namespace IoBeans.Controllers
 
         public IActionResult Registrarse()
         {
+            var roles = _usuarioServicio.GetRoles();
+            ViewBag.roles = roles.Select(p => new SelectListItem() { Value = p.RoleId.ToString(), Text = p.RoleName }).ToList<SelectListItem>();
             return View();
         }
 
