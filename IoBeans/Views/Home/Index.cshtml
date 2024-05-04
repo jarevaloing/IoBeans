@@ -1,8 +1,120 @@
-﻿@{
+﻿﻿@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="row mt-2">
+    <div class="col">
+        <div class="card">
+            <div class="card-header">Resumen Sensores </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="startDate">Fecha de inicio:</label>
+                    <input type="datetime-local" id="startDate" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="endDate">Fecha de fin:</label>
+                    <input type="datetime-local" id="endDate" class="form-control">
+                </div>
+                <br />
+                <button onclick="filtrarDatos()" class="btn btn-primary">Filtrar</button>
+                <br />
+                <div class="chart-container">
+                    <canvas id="chartSensores"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+@section Scripts {
+
+    <script>
+
+        function filtrarDatos() {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+
+            fetch(`Temperatura?startDate=${startDate}&endDate=${endDate}`)
+                .then((response) => {
+                    return response.ok ? response.json() : Promise.reject(response);
+                })
+                .then((dataJson) => {
+                    // Obtener el canvas y su contexto
+                    const canvas = document.getElementById('chartSensores');
+                    const ctx = canvas.getContext('2d');
+
+                    // Limpiar el contenido del canvas
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                    // Renderizar el nuevo gráfico
+                    renderizarGrafico(dataJson);
+                }).catch((error) => {
+                    console.log("error en filtrarDatos:", error); // Imprimir el error capturado
+                });
+        }
+
+
+        function renderizarGrafico(dataJson) {
+            const labels = dataJson.map((item) => { return item.timestamp });
+            const temperatureValues = dataJson.map((item) => { return item.temperature });
+            const humidityValues = dataJson.map((item) => { return item.humidity });
+            const soilMoistureValues = dataJson.map((item) => { return item.soilMoisture });
+
+            const data = {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Temperatura',
+                        data: temperatureValues,
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Humedad',
+                        data: humidityValues,
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Humedad del Suelo',
+                        data: soilMoistureValues,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderWidth: 1
+                    }
+                ]
+            };
+
+            const config = {
+                type: 'line',
+                data: data,
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            };
+
+            // Obtener el canvas y su contexto
+            const canvas = document.getElementById('chartSensores');
+            const ctx = canvas.getContext('2d');
+
+            // Destruir el gráfico existente, si lo hay
+            if (window.sensorDataChart) {
+                window.sensorDataChart.destroy();
+            }
+
+            // Crear un nuevo gráfico
+            window.sensorDataChart = new Chart(ctx, config);
+        }
+
+
+    </script>
+
+}
+
+

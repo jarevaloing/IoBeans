@@ -16,3 +16,9 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.chart-container {
+    width: 100%;
+    height: 400px;
+    overflow: auto;
+}
