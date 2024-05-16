@@ -16,18 +16,18 @@
             <div class="form-group">
                 <label asp-for="Username" class="control-label"></label>
                 <input asp-for="Username" class="form-control" />
-                <span asp-validation-for="Username" class="text-danger"></span>
+                <span asp-validation-for="Username" class="text-danger" type="hidden"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" class="form-control" />
+                <input asp-for="Password" class="form-control" placeholder="Deja en blanco para mantener la contraseña actual" />
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
-                <label asp-for="RoleId" class="control-label"></label>
-                <select asp-for="RoleId" class="form-control" asp-items="ViewBag.RoleId"></select>
-                <span asp-validation-for="RoleId" class="text-danger"></span>
+                @Html.DropDownListFor(m => m.RoleId, (List<SelectListItem>)ViewBag.roles, "Seleccione un rol", new { @class = "form-control btn-block" })
             </div>
+            <br />
             <div class="form-group">
                 <input type="submit" value="Guardar" class="btn btn-primary" />
             </div>
@@ -38,4 +38,3 @@
 <div>
     <a asp-action="Index">Regresar</a>
 </div>
-

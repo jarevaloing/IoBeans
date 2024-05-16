@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using IoBeans.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using IoBeans.Recursos;
+using Microsoft.AspNetCore.Authentication;
 
 namespace IoBeans.Controllers
 {
@@ -52,7 +54,7 @@ namespace IoBeans.Controllers
         // GET: Logins/Create
         public IActionResult Create()
         {
-            ViewData["RoleId"] = new SelectList(_context.Roles, "RoleId", "RoleId");
+            ViewData["RoleId"] = new SelectList(_context.Roles, "RoleId", "RoleName");
             return View();
         }
 
@@ -69,7 +71,7 @@ namespace IoBeans.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RoleId"] = new SelectList(_context.Roles, "RoleId", "RoleId", login.RoleId);
+            ViewData["RoleId"] = new SelectList(_context.Roles, "RoleId", "RoleName", login.RoleId);
             return View(login);
         }
 
@@ -86,7 +88,9 @@ namespace IoBeans.Controllers
             {
                 return NotFound();
             }
-            ViewData["RoleId"] = new SelectList(_context.Roles, "RoleId", "RoleId", login.RoleId);
+            var roles = _context.Roles.ToListAsync().Result;
+            ViewBag.roles = roles.Select(p => new SelectListItem() { Value = p.RoleId.ToString(), Text = p.RoleName }).ToList<SelectListItem>();
+
             return View(login);
         }
 
@@ -95,23 +99,30 @@ namespace IoBeans.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UserId,Username,Password,RoleId")] Login login)
+        public async Task<IActionResult> Edit(int id, Login login)
         {
             if (id != login.UserId)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            var Usuario = _context.Logins.FindAsync(id).Result;
+
+            Usuario.RoleId = login.RoleId;
+            Usuario.Password = Utilidades.EncriptarClave(login.Password);
+
+
+
+            if (Usuario.UserId == id)
             {
                 try
                 {
-                    _context.Update(login);
+                    _context.Update(Usuario);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!LoginExists(login.UserId))
+                    if (!LoginExists(Usuario.UserId))
                     {
                         return NotFound();
                     }
@@ -122,7 +133,7 @@ namespace IoBeans.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RoleId"] = new SelectList(_context.Roles, "RoleId", "RoleId", login.RoleId);
+            ViewData["RoleId"] = new SelectList(_context.Roles, "RoleId", "RoleName", login.RoleId);
             return View(login);
         }
 
@@ -168,5 +179,13 @@ namespace IoBeans.Controllers
         {
             return (_context.Logins?.Any(e => e.UserId == id)).GetValueOrDefault();
         }
+
+        public IActionResult CerrarSesion()
+        {
+            HttpContext.SignOutAsync();
+
+            return RedirectToAction("IniciarSesion", "Inicio");
+        }
+
     }
 }
