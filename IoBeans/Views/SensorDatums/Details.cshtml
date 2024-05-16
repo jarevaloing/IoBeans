@@ -1,0 +1,48 @@
+﻿@model IoBeans.Models.SensorDatum
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Detalle</h1>
+
+<div>
+    <h4>SensorDatum</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.SensorId)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.SensorId)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Temperature)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Temperature)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Humidity)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Humidity)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.SoilMoisture)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.SoilMoisture)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Timestamp)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Timestamp)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.ReadingId">Edit</a> |
+    <a asp-action="Index">Regresar</a>
+</div>

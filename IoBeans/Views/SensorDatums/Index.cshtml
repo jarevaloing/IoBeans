@@ -1,0 +1,121 @@
+﻿@model IoBeans.Controllers.PaginatedList<IoBeans.Models.SensorDatum>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Data Sensores</h1>
+
+<p>
+    <a asp-action="Create">Crear Nuevo Registro</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model[0].SensorId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model[0].Temperature)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model[0].Humidity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model[0].SoilMoisture)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model[0].Timestamp)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SensorId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Temperature)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Humidity)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SoilMoisture)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Timestamp)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.ReadingId">Editar</a> |
+                    <a asp-action="Details" asp-route-id="@item.ReadingId">Detalle</a> |
+                    <a asp-action="Delete" asp-route-id="@item.ReadingId">Eliminar</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="pagination">
+    @if (Model.HasPreviousPage)
+    {
+        <a asp-action="Index" asp-route-pageNumber="@(Model.PageIndex - 1)">Previous</a>
+    }
+
+    @if (Model.PageIndex > 3)
+    {
+        <a asp-action="Index" asp-route-pageNumber="1">1</a>
+        @if (Model.PageIndex > 4)
+        {
+            <span>...</span>
+        }
+    }
+
+    @for (int i = Math.Max(1, Model.PageIndex - 2); i <= Math.Min(Model.TotalPages, Model.PageIndex + 2); i++)
+    {
+        <a asp-action="Index" asp-route-pageNumber="@i" class="@(i == Model.PageIndex ? "current" : "")">@i</a>
+    }
+
+    @if (Model.PageIndex < Model.TotalPages - 2)
+    {
+        @if (Model.PageIndex < Model.TotalPages - 3)
+        {
+            <span>...</span>
+        }
+        <a asp-action="Index" asp-route-pageNumber="@Model.TotalPages">@Model.TotalPages</a>
+    }
+
+    @if (Model.HasNextPage)
+    {
+        <a asp-action="Index" asp-route-pageNumber="@(Model.PageIndex + 1)">Next</a>
+    }
+</div>
+
+<style>
+    .pagination a {
+        margin: 0 2px;
+        padding: 5px 10px;
+        background-color: #f4f4f4;
+        border: 1px solid #ddd;
+        text-decoration: none;
+        color: #333;
+    }
+
+        .pagination a.current {
+            font-weight: bold;
+            background-color: #007bff;
+            color: #fff;
+            border-color: #007bff;
+        }
+
+        .pagination a:hover {
+            background-color: #ddd;
+        }
+
+    .pagination span {
+        padding: 5px 10px;
+    }
+</style>

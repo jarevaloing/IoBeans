@@ -24,8 +24,8 @@ namespace IoBeans.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-//                optionsBuilder.UseSqlServer("server=YEKO\\SQLEXPRESS; database=IoBeans; integrated security=true; TrustServerCertificate=Yes");
+                //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                //                optionsBuilder.UseSqlServer("server=YEKO\\SQLEXPRESS; database=IoBeans; integrated security=true; TrustServerCertificate=Yes");
             }
         }
 
@@ -65,11 +65,9 @@ namespace IoBeans.Models
             modelBuilder.Entity<SensorDatum>(entity =>
             {
                 entity.HasKey(e => e.ReadingId)
-                    .HasName("PK__SensorDa__C80F9C6E066AE09A");
+                    .HasName("PK__SensorDa__C80F9C6EE783992C");
 
-                entity.Property(e => e.ReadingId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("ReadingID");
+                entity.Property(e => e.ReadingId).HasColumnName("ReadingID");
 
                 entity.Property(e => e.Humidity).HasColumnType("decimal(5, 2)");
 
