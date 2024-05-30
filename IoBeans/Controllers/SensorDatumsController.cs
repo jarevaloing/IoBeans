@@ -69,6 +69,36 @@ namespace IoBeans.Controllers
             return View(sensorDatum);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> PostSensorData([FromBody] List<SensorDatum> requestData)
+        {
+            if (requestData == null || requestData.Count == 0)
+            {
+                return BadRequest("Invalid sensor data.");
+            }
+
+            foreach (var request in requestData)
+            {
+                if (request == null)
+                {
+                    return BadRequest("Invalid sensor data.");
+                }
+
+                // Ensure the timestamp is parsed correctly if needed
+                if (!DateTime.TryParse(request.Timestamp.ToString(), out var timestamp))
+                {
+                    return BadRequest("Invalid timestamp format.");
+                }
+
+                request.Timestamp = timestamp;
+
+                _context.SensorData.Add(request);
+            }
+
+            await _context.SaveChangesAsync();
+            return Ok("Registros insertados correctamente.");
+        }
+
         // GET: SensorDatums/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
