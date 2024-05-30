@@ -3,17 +3,18 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using IoBeans.Servicios.Contrato;
 using IoBeans.Servicios.Inplementacion;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+// Configure DbContext to use MySQL
 builder.Services.AddDbContext<IoBeansContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("conexion")));
+    options.UseMySql(builder.Configuration.GetConnectionString("conexion"),
+                     new MySqlServerVersion(new Version(10, 4, 32))));
 
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 
